@@ -129,7 +129,7 @@ function Doors:CheckLastState(side)
             return true
         end
         elseif side == 2 then
-        if (Animatronics:GetState('Chica') and Animatronics:GetState('Chica').Name == Animatronics:GetLastState('Chica')) or (Animatronics:GetState('Freddy') and Animatronics:GetState('Freddy').Name == Animatronics:GetLastState('Freddy')) then
+        if (Animatronics:GetState('Chica') and Animatronics:GetState('Chica').Name == Animatronics:GetLastState('Chica')) or (Animatronics:GetState('Freddy') and (Animatronics:GetState('Freddy').Name == Animatronics:GetLastState('Freddy') or Animatronics:GetState('Freddy').Name == '5') ) then
             return true
         end
     end
