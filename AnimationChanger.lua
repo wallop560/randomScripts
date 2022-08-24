@@ -1,3 +1,7 @@
+--getgenv().emotes = {cum=3823158750,penis=3360692915}
+--getgenv().animationPack = 82
+--getgenv().animations = {}
+
 local Players = game:GetService('Players')
 local HttpService = game:GetService('HttpService')
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -51,14 +55,18 @@ function UpdateCharacter(Character)
         end
         table.insert(equipedEmotes,tostring(_))
     end
-    Humanoid.HumanoidDescription:SetEmotes(Emotes)
-    Humanoid.HumanoidDescription:SetEquippedEmotes(equipedEmotes)
-    if AnimationPack and Bundles[AnimationPack] then
-        print('bundle')
-        ApplyAnimations(Bundles[AnimationPack],Character)
-    else
-        print('individual')
-        ApplyAnimations(Animations,Character)
+    if getgenv().emotesEnabled then
+        Humanoid.HumanoidDescription:SetEmotes(Emotes)
+        Humanoid.HumanoidDescription:SetEquippedEmotes(equipedEmotes)
+    end
+    if getgenv().animationsEnabled then
+        if AnimationPack and Bundles[AnimationPack] then
+            print('bundle')
+            ApplyAnimations(Bundles[AnimationPack],Character)
+        else
+            print('individual')
+            ApplyAnimations(Animations,Character)
+        end
     end
 end
 
