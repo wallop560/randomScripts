@@ -37,7 +37,6 @@ function ApplyAnimations(Animations,Character)
 
                 AnimationObject = AnimObject[fullstr..'Anim']
             end
-            print(tostring(AnimationObject))
             AnimationObject.AnimationId = tostring(id)
         end
     end
@@ -61,10 +60,8 @@ function UpdateCharacter(Character)
     end
     if getgenv().animationsEnabled then
         if AnimationPack and Bundles[AnimationPack] then
-            print('bundle')
             ApplyAnimations(Bundles[AnimationPack],Character)
         else
-            print('individual')
             ApplyAnimations(Animations,Character)
         end
     end
