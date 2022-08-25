@@ -1,7 +1,3 @@
---getgenv().emotes = {cum=3823158750,penis=3360692915}
---getgenv().animationPack = 82
---getgenv().animations = {}
-
 local Players = game:GetService('Players')
 local HttpService = game:GetService('HttpService')
 local MarketplaceService = game:GetService("MarketplaceService")
@@ -66,7 +62,8 @@ function UpdateCharacter(Character)
         end
     end
 end
-
+repeat wait() until Players.LocalPlayer and LocalPlayer.Character
+LocalPlayer = Players.LocalPlayer
 --UpdateCharacter(LocalPlayer.Character)
 pcall(UpdateCharacter,LocalPlayer.Character)
 LocalPlayer.CharacterAdded:Connect(UpdateCharacter)
