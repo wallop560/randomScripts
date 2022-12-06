@@ -62,8 +62,9 @@ function UpdateCharacter(Character)
         end
     end
 end
-repeat wait() until Players.LocalPlayer and LocalPlayer.Character
-LocalPlayer = Players.LocalPlayer
+repeat wait() until Players.LocalPlayer and Players.LocalPlayer.Character
 --UpdateCharacter(LocalPlayer.Character)
+
+LocalPlayer = Players.LocalPlayer
 pcall(UpdateCharacter,LocalPlayer.Character)
 LocalPlayer.CharacterAdded:Connect(UpdateCharacter)
