@@ -1,18 +1,19 @@
 local plr = game:GetService("Players").LocalPlayer
 function Destroy(...)
-v = {...}
-for i,v in next,v do
-local args = {
-    "",
-    CFrame.new(Vector3.new(0,0,0), Vector3.new(0,0,0)),
-    plr,
-    v,
-    true
-}
-
-game:GetService("ReplicatedStorage").PlaceStructure.ClientPlacedBlueprint:FireServer(unpack(args))
+    v = {...}
+    for i,v in next,v do
+        local args = {
+            "",
+            CFrame.new(Vector3.new(0,0,0), Vector3.new(0,0,0)),
+            plr,
+            v,
+            true
+        }
+        
+        game:GetService("ReplicatedStorage").PlaceStructure.ClientPlacedBlueprint:FireServer(unpack(args))
+    end
 end
-end
+-- Hooks the Destroy function so it looks neat
 local nc; 
 nc=hookfunction(getrawmetatable(game).__namecall,function(self,...) 
     if getnamecallmethod() == 'Destroy' and checkcaller() then 
