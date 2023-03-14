@@ -1,0 +1,197 @@
+function Create(Class,Properties,Children)
+	Class = Class or 'Frame'
+	Properties = Properties or {}
+	Children = Children or {}
+	
+	local instance = Instance.new(Class)
+	
+	for Property,value in next,Properties do
+		instance[Property] = value
+	end
+	for _,Child in next,Children do
+		Child.Parent = instance
+	end
+	return instance
+end
+--                         //  Created By I2L  \\
+--                         \\  le birdo#2221   //
+local GUI = Create(
+	"ScreenGui",{
+		Name = "GUI",
+		ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	},{
+		Create(
+			"Frame",{
+				Name = "Body",
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Size = UDim2.new(0, 150, 0, 70),
+				BackgroundColor3 = Color3.new(0.0784314, 0.0784314, 0.0784314)
+			},{
+				Create("UICorner"),
+				Create(
+					"Frame",{
+						AnchorPoint = Vector2.new(0.5, 0),
+						Position = UDim2.new(0.5, 0, 0, 30),
+						Size = UDim2.new(1, -6, 1, -34),
+						BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+					},{
+						Create("UICorner"),
+						Create(
+							"TextBox",{
+								FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json",Enum.FontWeight.Bold,Enum.FontStyle.Normal),
+								TextColor3 = Color3.new(1, 1, 1),
+								Text = "",
+								Name = "NameBox",
+								TextStrokeTransparency = 0,
+								FontSize = Enum.FontSize.Size14,
+								BackgroundTransparency = 1,
+								Size = UDim2.new(1, 0, 0, 30),
+								PlaceholderText = "Name Here",
+								TextSize = 14,
+								BackgroundColor3 = Color3.new(1, 1, 1)
+							},{
+								Create(
+									"Frame",{
+										AnchorPoint = Vector2.new(0.5, 1),
+										Name = "FocusBarHolder",
+										Position = UDim2.new(0.5, 0, 1, 0),
+										Size = UDim2.new(1, -10, 0, 1),
+										BorderSizePixel = 0,
+										BackgroundColor3 = Color3.new(0.0588235, 0.0588235, 0.0588235)
+									},{
+										Create(
+											"Frame",{
+												AnchorPoint = Vector2.new(0.5, 0),
+												Name = "FocusBar",
+												Position = UDim2.new(0.5, 0, 0, 0),
+												Size = UDim2.new(0, 0, 1, 0),
+												BorderSizePixel = 0,
+												BackgroundColor3 = Color3.new(1, 1, 1)
+											}
+										)
+									}
+								)
+							}
+						)
+					}
+				),
+				Create(
+					"TextLabel",{
+						FontSize = Enum.FontSize.Size14,
+						TextColor3 = Color3.new(1, 1, 1),
+						Text = "Kill by le birdo#2221",
+						Name = "Title",
+						Size = UDim2.new(1, 0, 0, 30),
+						BackgroundTransparency = 1,
+						BackgroundColor3 = Color3.new(1, 1, 1),
+						FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json",Enum.FontWeight.Bold,Enum.FontStyle.Normal),
+						TextSize = 14
+					}
+				),
+				Create(
+					"TextLabel",{
+						FontSize = Enum.FontSize.Size14,
+						TextColor3 = Color3.new(1, 1, 1),
+						Text = "",
+						Name = "Message",
+						Size = UDim2.new(1, 0, 0, 30),
+						Position = UDim2.new(0,0,1,0),
+						BackgroundTransparency = 1,
+						BackgroundColor3 = Color3.new(1, 1, 1),
+						FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json",Enum.FontWeight.Bold,Enum.FontStyle.Normal),
+						TextSize = 12
+					}
+				)
+			}
+		)
+	}
+)
+local TS = game:GetService('TweenService')
+local UIS = game:GetService('UserInputService')
+local Players = game:GetService('Players')
+local function Dragify(Body,Handle)
+	Handle = Handle or Body
+	
+	local Changed 
+	
+	Handle.InputBegan:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			local CurrentCamera = workspace.CurrentCamera
+			local Position = UDim2.fromScale((Body.AbsolutePosition.X+Body.Size.X.Offset/2)/CurrentCamera.ViewportSize.X,(Body.AbsolutePosition.Y+Body.Size.Y.Offset/2)/CurrentCamera.ViewportSize.Y)
+			local MousePos = UDim2.fromScale(Input.Position.X/CurrentCamera.ViewportSize.X,Input.Position.Y/CurrentCamera.ViewportSize.Y)
+			
+			local Grip = MousePos-Position
+			Changed = UIS.InputChanged:Connect(function(Input)
+				if Input.UserInputType == Enum.UserInputType.MouseMovement then
+					MousePos = UDim2.fromScale(Input.Position.X/CurrentCamera.ViewportSize.X,Input.Position.Y/(CurrentCamera.ViewportSize.Y-36))
+					
+					TS:Create(Body,TweenInfo.new(.1,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position = MousePos-Grip}):Play()
+				end
+			end)
+		end
+	end)
+	Handle.InputEnded:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			Changed:Disconnect()
+		end
+	end)
+end
+local Player = Players.LocalPlayer
+GUI.Parent = game.CoreGui
+local Body = GUI.Body
+local Message = Body.Message
+Body.Position = UDim2.fromScale(.5,.5)
+local Frame = Body.Frame
+local NameBox = Frame.NameBox
+local FocusBar = NameBox.FocusBarHolder.FocusBar
+
+local MessageR
+
+local function SendMessage(MessageTxt,Color)
+    Message.TextTransparency = 1
+    Message.TextColor3 = Color
+    TS:Create(Message,TweenInfo.new(1,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{TextTransparency = 0}):Play()
+    Message.Text = MessageTxt
+    if MessageR then coroutine.close(MessageR) end
+    MessageR = coroutine.create(function()
+        wait(3)
+        TS:Create(Message,TweenInfo.new(3,Enum.EasingStyle.Linear),{TextTransparency = 1}):Play()
+    end)
+    coroutine.resume(MessageR)
+end
+NameBox.Focused:Connect(function()
+    TS:Create(FocusBar,TweenInfo.new(.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Size=UDim2.new(1,0,1,0),BackgroundTransparency=0}):Play()
+end)
+NameBox.FocusLost:Connect(function(Enter)
+    TS:Create(FocusBar,TweenInfo.new(.2,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Size=UDim2.new(0,0,1,0),BackgroundTransparency=1}):Play()
+    if NameBox.text == '' then return end
+    local FoundPlayer
+    for _,v in next,Players:GetPlayers() do
+        if v.Name:sub(1,#NameBox.Text):lower() == NameBox.Text:lower() or v.DisplayName:sub(1,#NameBox.Text):lower() == NameBox.Text:lower() then
+            FoundPlayer = v
+        end
+    end
+    NameBox.Text = FoundPlayer.Name
+    if Enter then
+        if not FoundPlayer then return SendMessage('Could not find Player.',Color3.new(1,0,0)) end
+        local Axe = Player.Character:FindFirstChild('Tool') or Player.Backpack:FindFirstChild('Tool')
+        if not Axe then return SendMessage('An axe is required for this.',Color3.new(1,0,0)) end
+        local TargetChar = FoundPlayer.Character
+        if not TargetChar then return SendMessage('Player Character isnt spawned.',Color3.new(1,0,0)) end
+        if TargetChar.Humanoid.SeatPart then return SendMessage('Player is currently Seated.',Color3.new(1,0,0)) end
+        workspace.CurrentCamera.CameraSubject = TargetChar.Humanoid
+        Axe.Parent = Player.Character
+        wait()
+        Player.Character.Humanoid:Destroy()
+        firetouchinterest(Axe.Handle,TargetChar.HumanoidRootPart,1)
+        firetouchinterest(Axe.Handle,TargetChar.HumanoidRootPart,0)
+        Axe:GetPropertyChangedSignal('Parent'):Wait()
+        if not Axe or Axe.Parent == nil then return SendMessage('Kill failed.',Color3.new(1,.5,0)) end
+        local HRP = Player.Character.HumanoidRootPart
+        for i = 1,10 do
+            wait()
+            HRP.CFrame = workspace.Region_Volcano.Lava.Lava.CFrame + Vector3.new(0,10,0)
+        end
+    end
+end)
+Dragify(Body,Body)
