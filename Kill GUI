@@ -178,7 +178,7 @@ NameBox.FocusLost:Connect(function(Enter)
         if not Axe then return SendMessage('An axe is required for this.',Color3.new(1,0,0)) end
         local TargetChar = FoundPlayer.Character
         if not TargetChar then return SendMessage('Player Character isnt spawned.',Color3.new(1,0,0)) end
-        if TargetChar.Humanoid.SeatPart then return SendMessage('Player is currently Seated.',Color3.new(1,0,0)) end
+        if TargetChar.Humanoid.SeatPart and TargetChar.Humanoid.Sit then return SendMessage('Player is currently Seated.',Color3.new(1,0,0)) end
         workspace.CurrentCamera.CameraSubject = TargetChar.Humanoid
         Axe.Parent = Player.Character
         wait()
@@ -194,4 +194,4 @@ NameBox.FocusLost:Connect(function(Enter)
         end
     end
 end)
-Dragify(Body,Body)
+Dragify(Body)
